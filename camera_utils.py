@@ -73,14 +73,14 @@ def write_frames(video_input,out,fname,frame_skip):
     return  
 
 if __name__ == "__main__":
-    # input = '/Users/allenlau/Documents/CCNY/Fall23/CSCI6516_ComputerVision/project/KickFlowTracker/data/external/camera_calibration.MOV'
-    # write_frames(input,'data/external/camera_calibration','cal_IMG',50)
+    # input = '/Users/allenlau/Documents/CCNY/Fall23/CSCI6516_ComputerVision/project/KickFlowTracker/data/external/vid5.mov'
+    # write_frames(input,'data/external/optFlowTest','cal_IMG',1)
 
     #camera calibration 
-    chessboardsize = (6,4)
-    framesize = (1080,1920)
-    calib_img_path = './data/external/camera_calibration/*.png'
-    cam_calib_params = camera_calibration(chessboardsize,framesize,calib_img_path)
-    print(cam_calib_params[1])
+    # chessboardsize = (6,4)
+    # framesize = (1080,1920)
+    # calib_img_path = './data/external/camera_calibration/*.png'
+    # cam_calib_params = camera_calibration(chessboardsize,framesize,calib_img_path)
+    # print(cam_calib_params[1])
 
     pass

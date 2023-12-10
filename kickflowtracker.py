@@ -1,5 +1,6 @@
 #import libraries
 import cv2 as cv 
+import motion_utils as mu 
 
 
 
@@ -13,6 +14,13 @@ def main(video_input):
     #check if video is unable to be obtained
     if video.isOpened() == False:
         raise Exception('Error opening video stream') 
+    
+    #get first frame 
+    ret,first_frame = video.read()
+    #define shape 
+    shape = first_frame.shape 
+    #init prev_img 
+    prev_img = cv.cvtColor(first_frame,cv.COLOR_BGR2GRAY)
 
     #ball tracking 
     while True:
@@ -20,16 +28,23 @@ def main(video_input):
         ret,frame = video.read()
         #if successfully reading frame
         if ret: 
-
-            #preprocessing (REPLACE AND REDO MANUALLY IF NEEDED)
+            #convert cur frame to grayscale 
+            frame = cv.cvtColor(frame,cv.COLOR_BGR2GRAY)
+            #optical flow 
+            mag,angle = mu.perform_optical_flow(prev_img,frame)
+            #optical flow visualization
+            opt_flow_viz = mu.visualize_optical_flow(mag,angle,shape)
 
             #display 
-            cv.imshow('KickFlow Tracker',frame)
+            cv.imshow('KickFlow Tracker',opt_flow_viz)
 
             #quit loop if 'q' pressed
             key = cv.waitKey(1) & 0xFF
             if key == ord('q'):
                 break
+
+            #update prev_img
+            prev_img = frame
         
         #quit if frame not returned 
         else:
@@ -43,5 +58,5 @@ def main(video_input):
     return  
 
 if __name__ == "__main__":
-    video_input = 'data/external/game_clip.mp4'
+    video_input = '/Users/allenlau/Documents/CCNY/Fall23/CSCI6516_ComputerVision/project/KickFlowTracker/data/external/vid5.mov'
     main(video_input)
