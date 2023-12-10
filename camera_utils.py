@@ -34,3 +34,4 @@ def write_frames(video_input,out,fname,frame_skip):
 if __name__ == "__main__":
     # input = '/Users/allenlau/Documents/CCNY/Fall23/CSCI6516_ComputerVision/project/KickFlowTracker/data/external/camera_calibration.MOV'
     # write_frames(input,'data/external/camera_calibration','cal_IMG',50)
+    pass
