@@ -5,6 +5,7 @@ import numpy as np
 import glob
 from tqdm import tqdm 
 from time import sleep
+import pickle
 
 def camera_calibration(chessboardsize,framesize,img_path):
     #define termination criteria
@@ -82,5 +83,7 @@ if __name__ == "__main__":
     # calib_img_path = './data/external/camera_calibration/*.png'
     # cam_calib_params = camera_calibration(chessboardsize,framesize,calib_img_path)
     # print(cam_calib_params[1])
+    # with open('./camera_parameters/camera_params.pkl','wb') as f:
+    #     pickle.dump(cam_calib_params,f)
 
     pass
