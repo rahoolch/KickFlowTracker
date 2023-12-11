@@ -84,5 +84,5 @@ def main(video_input):
     return  
 
 if __name__ == "__main__":
-    video_input = '/Users/rahool/Desktop/CCNY/Semester 3/Computer_Vision/Final_project/All_videos/IMG_4149.MOV'
+    video_input = 'data/external/media/IMG_4152.MOV'
     main(video_input)
