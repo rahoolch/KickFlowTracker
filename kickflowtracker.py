@@ -3,7 +3,7 @@ import cv2 as cv
 import motion_utils as mu 
 import camera_utils as cu
 import numpy as np
-
+import pickle as pkl
 
 
 
@@ -12,13 +12,20 @@ def main(video_input):
 
     tracker = cv.TrackerCSRT_create()
     BB = None
+    
+    with open('camera_parameters/camera_params.pkl','rb') as f:
+        data = pkl.load(f)
+        f.close()
+    
+    sx = 1/(data[1][0][0])
+    sy = 1/(data[1][1][1])
 
     def track(frame):
         (success, box) = tracker.update(frame)
         if success:
             (x, y, w, h) = [int(v) for v in box]
             cv.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
-        return success, frame
+        return success, frame, box
     #define CV video capture obj 
     video = cv.VideoCapture(video_input)
     #get fps of video feed 
@@ -36,6 +43,7 @@ def main(video_input):
     prev_img = cv.cvtColor(first_frame,cv.COLOR_BGR2GRAY)
 
     #ball tracking 
+    success = False
     while True:
         #read current frame 
         ret,frame = video.read()
@@ -46,7 +54,7 @@ def main(video_input):
             key = cv.waitKey(1) & 0xFF
 
             if BB is not None:
-                    success, frame = track(frame) # Track object
+                    success, frame, box = track(frame) # Track object
             
             if key == ord("c"): # Select Region of Interest (ROI) to track
                 # cv.imwrite('tracking_frame.png',frame)
@@ -59,6 +67,15 @@ def main(video_input):
             mag,angle = mu.perform_optical_flow(prev_img,gray_frame)
             #optical flow visualization
             opt_flow_viz = mu.visualize_optical_flow(mag,angle,shape)
+            data = {}
+            # print(success)
+            if success:
+                (x, y, w, h) = [int(v) for v in box]
+                avg_vel,avg_angle = mu.get_vector_velocity(mag,angle,sx,sy,x,y,w,60)
+                print(avg_vel,avg_angle)
+                
+                
+
 
             #display 
             concat_frame = np.concatenate((frame, opt_flow_viz), axis=1)
@@ -84,5 +101,5 @@ def main(video_input):
     return  
 
 if __name__ == "__main__":
-    video_input = '/Users/rahool/Desktop/CCNY/Semester 3/Computer_Vision/Final_project/All_videos/IMG_4152.MOV'
+    video_input = 'data/external/media/vid2.mov'
     main(video_input)
