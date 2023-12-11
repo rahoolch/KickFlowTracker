@@ -66,12 +66,31 @@ def write_frames(video_input,out,fname,frame_skip):
 
         if ret:
             if count%frame_skip==0:
-                cv.imwrite(os.path.join(out,f'{fname+'_'+str(count)+'.png'}'),frame)
+                cv.imwrite(os.path.join(out,f'{fname+"_"+str(count)+".png"}'),frame)
         else:
             break
         count+=1
     
-    return  
+    return  0
+
+
+def detect_circles(frame):
+    grayFrame = cv.cvtColor(frame,cv.COLOR_BGR2GRAY)
+    blurFrame = cv.GaussianBlur(grayFrame,(9,9),0)
+    circles = cv.HoughCircles(blurFrame,cv.HOUGH_GRADIENT,1,40,param1=65, param2=30, minRadius=35, maxRadius=85)
+    ball_x, ball_y,ball_r = 0,0,0
+    if circles is not None:
+        circles = np.uint16(np.around(circles))
+        circles = circles[0]
+        for (x,y,r) in circles:
+            if y>500 and x>100:
+                ball_x, ball_y,ball_r = x,y,r
+                break
+    return (ball_x-ball_r,ball_y-ball_r,2*ball_r,2*ball_r)
+        
+
+
+
 
 if __name__ == "__main__":
     # input = '/Users/allenlau/Documents/CCNY/Fall23/CSCI6516_ComputerVision/project/KickFlowTracker/data/external/vid5.mov'

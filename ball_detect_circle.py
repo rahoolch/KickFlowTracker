@@ -8,7 +8,7 @@ cv.imwrite("GrayScaleImage.png",grayFrame)
 blurFrame = cv.GaussianBlur(grayFrame,(9,9),0)
 cv.imwrite('BlurFrame.png',blurFrame)
 
-circles = cv.HoughCircles(blurFrame,cv.HOUGH_GRADIENT,1,30,param1=60, param2=30, minRadius=25, maxRadius=90)
+circles = cv.HoughCircles(blurFrame,cv.HOUGH_GRADIENT,1,40,param1=65, param2=30, minRadius=35, maxRadius=85)
 
 if circles is not None:
     circles = np.uint16(np.around(circles))
@@ -16,7 +16,7 @@ if circles is not None:
     circles = circles[0]
     for (x,y,r) in circles:
         
-        if y>500 and x>200:
+        if y>500 and x>100:
             print(x,y,r)
             cv.rectangle(frame, (x-r,y-r), (x+r, y+r), (0,255,0), 2)
             # cv.circle(frame,(x,y),r,(0,255,0), 2)

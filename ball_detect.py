@@ -26,6 +26,7 @@ while True:
     if key == ord("c"): # Select Region of Interest (ROI) to track
         cv.imwrite('tracking_frame.png',frame)
         BB = cv.selectROI("Frame", frame, fromCenter=False, showCrosshair=True)
+        print(BB)
         tracker.init(frame, BB)
         
     elif key == ord("q"):
