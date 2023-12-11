@@ -16,9 +16,11 @@ def main(video_input):
     with open('camera_parameters/camera_params.pkl','rb') as f:
         data = pkl.load(f)
         f.close()
-    
-    sx = 1/(data[1][0][0])
-    sy = 1/(data[1][1][1])
+    f = 24
+    fx = data[1][0][0]
+    fy = data[1][1][1]
+    sx = f/(fx)
+    sy = f/(fy)
 
     def track(frame):
         (success, box) = tracker.update(frame)
@@ -71,8 +73,8 @@ def main(video_input):
             # print(success)
             if success:
                 (x, y, w, h) = [int(v) for v in box]
-                avg_vel,avg_angle = mu.get_vector_velocity(mag,angle,sx,sy,x,y,w,60)
-                print(avg_vel,avg_angle)
+                avg_vel,avg_angle = mu.get_vector_velocity(mag,angle,sx,sy,fx,fy,x,y,w,60)
+                print(avg_vel)
                 
                 
 

@@ -25,19 +25,17 @@ def visualize_optical_flow(mag,angle,shape):
     return cv.cvtColor(mask, cv.COLOR_HSV2BGR)
 
 #function to calculate the real-world velocity in x and y of the ball from optical flow 
-def get_vector_velocity(mag,angle,sx,sy,x,y,r,fps):
+def get_vector_velocity(mag,angle,sx,sy,fx,fy,x,y,r,fps):
     #define bounding box 
     left = y
-    right = y+(2*r) 
+    right = y+(r) 
     top = x
-    bottom = x+(2*r)
+    bottom = x+(r)
     #define shape
     shape = mag.shape 
     #calculate the magnitude of sx and sy 
     s = np.sqrt(sx**2 + sy**2)
     #checking if we are within bounds 
-    print(shape)
-    print(left,right,top,bottom)
     m_per_s,avg_dir = 0,0
     if left >= 0 and right <= shape[1] and top >= 0 and bottom <= shape[0]:
         #define window for mag and angle 
@@ -45,8 +43,9 @@ def get_vector_velocity(mag,angle,sx,sy,x,y,r,fps):
         window_angle = angle[left:right,top:bottom]
         #mean to get pixels/frame 
         mag_pixels_per_frame = np.mean(window_mag)
-        #meters/frame 
-        m_per_frame = mag_pixels_per_frame * s
+        m_per_frame = mag_pixels_per_frame * np.sqrt(0.001905**2+0.001746**2)
+        # #meters/frame 
+        # m_per_frame = mag_pixels_per_frame * s * (1/np.sqrt(fx**2+fy**2))
         #meters/sec
         m_per_s = m_per_frame * fps
         #average direction 
