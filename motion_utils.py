@@ -4,13 +4,14 @@ import cv2 as cv
 #function to return the magnitude 
 def perform_optical_flow(prev_img,img):
     #computes the dense optical flow using Farneback method 
-    flow = cv.calcOpticalFlowFarneback(prev_img,img,None,0.5, 1, 10, 3, 5, 1.1, 0)
+    flow = cv.calcOpticalFlowFarneback(prev_img,img,None,0.5, 3, 10, 3, 5, 1.1, 0)
 
     #computes the magnitude and angle for the 2D vectors
     mag,angle = cv.cartToPolar(flow[...,0],flow[...,1])
 
     return mag, angle
 
+#function to return colored image for visualizing optical flow
 def visualize_optical_flow(mag,angle,shape):
     #define empty mask 
     mask = np.zeros(shape,dtype=np.uint8)
@@ -23,7 +24,31 @@ def visualize_optical_flow(mag,angle,shape):
     #convert hsv to rgb
     return cv.cvtColor(mask, cv.COLOR_HSV2BGR)
 
-
+#function to calculate the real-world velocity in x and y of the ball from optical flow 
+def get_vector_velocity(mag,angle,sx,sy,x,y,r,fps):
+    #define bounding box 
+    left = x-r
+    right = x+r 
+    top = y-r
+    bottom = y+r
+    #define shape
+    shape = mag.shape 
+    #calculate the magnitude of sx and sy 
+    s = np.sqrt(sx**2 + sy**2)
+    #checking if we are within bounds 
+    if left >= 0 and right <= shape[1] and top >= 0 and bottom >= shape[0]:
+        #define window for mag and angle 
+        window_mag = mag[x-r:x+r,y-r,y+r]
+        window_angle = angle[x-r:x+r,y-r,y+r]
+        #mean to get pixels/frame 
+        mag_pixels_per_frame = np.mean(window_mag)
+        #meters/frame 
+        m_per_frame = mag_pixels_per_frame * s
+        #meters/sec
+        m_per_s = m_per_frame * fps
+        #average direction 
+        avg_dir = np.mean(window_angle)
+        return m_per_s,avg_dir
 
 if __name__ == '__main__':
     #defining iamges 
@@ -39,6 +64,7 @@ if __name__ == '__main__':
     imgt2 = cv.cvtColor(imgt2,cv.COLOR_BGR2GRAY)
     #perform optical flow
     mag,angle = perform_optical_flow(imgt1,imgt2)
+    print(angle)
     #visualizing optical flow 
     opt_flow_viz = visualize_optical_flow(mag,angle,shape)
     #display 
