@@ -103,5 +103,5 @@ def main(video_input):
     return  
 
 if __name__ == "__main__":
-    video_input = 'data/external/media/vid2.mov'
+    video_input = 'data/external/media/IMG_4152.MOV'
     main(video_input)

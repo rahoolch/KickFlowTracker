@@ -37,19 +37,19 @@ def get_vector_velocity(mag,angle,sx,sy,fx,fy,x,y,r,fps):
     s = np.sqrt(sx**2 + sy**2)
     #checking if we are within bounds 
     m_per_s,avg_dir = 0,0
-    if left >= 0 and right <= shape[1] and top >= 0 and bottom <= shape[0]:
-        #define window for mag and angle 
-        window_mag = mag[left:right,top:bottom]
-        window_angle = angle[left:right,top:bottom]
-        #mean to get pixels/frame 
-        mag_pixels_per_frame = np.mean(window_mag)
-        m_per_frame = mag_pixels_per_frame * np.sqrt(0.001905**2+0.001746**2)
-        # #meters/frame 
-        # m_per_frame = mag_pixels_per_frame * s * (1/np.sqrt(fx**2+fy**2))
-        #meters/sec
-        m_per_s = m_per_frame * fps
-        #average direction 
-        avg_dir = np.mean(window_angle)
+    # if left >= 0 and right <= shape[1] and top >= 0 and bottom <= shape[0]:
+    #define window for mag and angle 
+    window_mag = mag[left:right,top:bottom]
+    window_angle = angle[left:right,top:bottom]
+    #mean to get pixels/frame 
+    mag_pixels_per_frame = np.mean(window_mag)
+    m_per_frame = mag_pixels_per_frame * np.sqrt(0.001905**2+0.001746**2)
+    # #meters/frame 
+    # m_per_frame = mag_pixels_per_frame * s * (1/np.sqrt(fx**2+fy**2))
+    #meters/sec
+    m_per_s = m_per_frame * fps
+    #average direction 
+    avg_dir = np.mean(window_angle)
         
     return m_per_s,avg_dir
     
